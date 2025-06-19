@@ -29,3 +29,12 @@ pip install ruff
 # mypy install（）
 pip install mypy
 ```
+
+### 2. Database Migration
+
+Execute Command below：
+
+```bash
+# database migration
+alembic upgrade head
+```
