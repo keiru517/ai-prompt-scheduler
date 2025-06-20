@@ -37,7 +37,7 @@ def login_user(
                 login_time = datetime.utcnow(),
                 otp = otp_code,
                 otp_verified = False,
-                expires_at=datetime.utcnow() + timedelta(minutes=5)
+                expire_at=datetime.utcnow() + timedelta(minutes=5)
             )
             db.add(attempt)
             db.commit()
