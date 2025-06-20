@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Body, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Body, Depends
 from sqlalchemy.orm import Session
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from typing import List, Optional
 
 import schemas
 import services
@@ -41,3 +40,14 @@ async def update_user(
         db=db,
         user_data=user_data
     )
+
+@router.post("/logout")
+async def logout(
+    credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()), 
+    db: Session = Depends(get_db), 
+    dependencies=[Depends(services.verify_token)]
+):
+    token = credentials.credentials
+    services.blacklist_token(token, db)  # Blacklist the token
+
+    return {"message": "Successfully logged out."}

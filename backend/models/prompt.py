@@ -9,7 +9,6 @@ from sqlalchemy import (
     Text,
     Time,
     ARRAY,
-    PrimaryKeyConstraint,
     UniqueConstraint
 )
 from sqlalchemy.orm import relationship

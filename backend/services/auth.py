@@ -1,8 +1,6 @@
-from typing import List, Tuple, Optional
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, func, case, select
 import random
 from datetime import datetime, timedelta
 

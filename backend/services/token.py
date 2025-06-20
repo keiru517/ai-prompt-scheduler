@@ -22,7 +22,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 1440
 
 
-async def verify_admin_token(db: Session = Depends(get_db), credentials: HTTPAuthorizationCredentials = Security(security)) -> str:
+async def verify_token(db: Session = Depends(get_db), credentials: HTTPAuthorizationCredentials = Security(security)) -> str:
     try:
         token = credentials.credentials
         blacklisted_token = (
