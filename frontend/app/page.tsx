@@ -2,28 +2,30 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-export default function Home() {
+import { countries } from "@/lib/countries";
+import PhoneVerify from "@/components/Login/phone-verify";
+import SMSVerify from "@/components/Login/sms-verify";
+
+export default function PhoneVerificationPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [countryCode, setCountryCode] = useState("+1");
+  const [selectedCountry, setSelectedCountry] = useState(countries[0]);
+  const [currentScreen, setCurrentScreen] = useState<"phone" | "verify">(
+    "phone"
+  );
+  const [resendTimer, setResendTimer] = useState(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Sending verification code to:", countryCode + phoneNumber);
-    // Handle form submission here
-  };
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendTimer]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
@@ -53,83 +55,26 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Phone Verification Form */}
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-          <CardHeader className="text-center space-y-2 pb-4">
-            <h2 className="text-2xl font-semibold text-gray-900">
-              Enter Your Phone Number
-            </h2>
-            <p className="text-gray-600">
-              {"We'll send you a verification code"}
-            </p>
-          </CardHeader>
-
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label
-                  htmlFor="phone"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Phone Number
-                </Label>
-
-                <div className="flex gap-2">
-                  {/* Country Code Selector */}
-                  <Select value={countryCode} onValueChange={setCountryCode}>
-                    <SelectTrigger className="w-24 h-12 border-2 border-gray-200 focus:border-purple-500">
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-4 bg-gradient-to-r from-red-500 via-white to-red-500 rounded-sm border border-gray-300 flex items-center justify-center">
-                          <div className="w-3 h-2 bg-gradient-to-r from-red-500 via-white via-blue-500 to-red-500 rounded-xs"></div>
-                        </div>
-                        <span className="text-sm font-medium">+1</span>
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="+1">
-                        <div className="flex items-center gap-2">
-                          <div className="w-5 h-4 bg-gradient-to-r from-red-500 via-white to-red-500 rounded-sm border border-gray-300"></div>
-                          <span>+1 (US)</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="+44">
-                        <div className="flex items-center gap-2">
-                          <div className="w-5 h-4 bg-gradient-to-r from-blue-500 via-white to-red-500 rounded-sm border border-gray-300"></div>
-                          <span>+44 (UK)</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="+33">
-                        <div className="flex items-center gap-2">
-                          <div className="w-5 h-4 bg-gradient-to-r from-blue-500 via-white to-red-500 rounded-sm border border-gray-300"></div>
-                          <span>+33 (FR)</span>
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Phone Number Input */}
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="(000) 000-0000"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="flex-1 h-12 border-2 border-gray-200 focus:border-purple-500 text-base"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                className="w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium text-base shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                Send Verification Code
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        {currentScreen === "phone" ? (
+          <>
+            <PhoneVerify
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
+              phoneNumber={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
+              setCurrentScreen={setCurrentScreen}
+              setResendTimer={setResendTimer}
+            />
+          </>
+        ) : (
+          <SMSVerify
+            resendTimer={resendTimer}
+            selectedCountry={selectedCountry}
+            phoneNumber={phoneNumber}
+            setCurrentScreen={setCurrentScreen}
+            setResendTimer={setResendTimer}
+          />
+        )}
       </div>
     </div>
   );
