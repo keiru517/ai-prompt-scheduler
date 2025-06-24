@@ -8,14 +8,16 @@ import { Calendar, Star } from "lucide-react";
 import { countries } from "@/lib/countries";
 import PhoneVerify from "@/components/Login/phone-verify";
 import SMSVerify from "@/components/Login/sms-verify";
+import SignUp from "@/components/Login/singup";
 
 export default function PhoneVerificationPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
-  const [currentScreen, setCurrentScreen] = useState<"phone" | "verify">(
-    "phone"
-  );
+  const [currentScreen, setCurrentScreen] = useState<
+    "phone" | "verify" | "signup"
+  >("signup");
   const [resendTimer, setResendTimer] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -59,13 +61,23 @@ export default function PhoneVerificationPage() {
           <>
             <PhoneVerify
               selectedCountry={selectedCountry}
-              setSelectedCountry={setSelectedCountry}
               phoneNumber={phoneNumber}
+              isLoading={isLoading}
+              setSelectedCountry={setSelectedCountry}
               setPhoneNumber={setPhoneNumber}
               setCurrentScreen={setCurrentScreen}
               setResendTimer={setResendTimer}
             />
           </>
+        ) : currentScreen === "signup" ? (
+          <SignUp
+            selectedCountry={selectedCountry}
+            phoneNumber={phoneNumber}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            setCurrentScreen={setCurrentScreen}
+            setResendTimer={setResendTimer}
+          />
         ) : (
           <SMSVerify
             resendTimer={resendTimer}

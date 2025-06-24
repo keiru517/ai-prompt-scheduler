@@ -1,6 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI PROMPT SCHEDULER.
+
+## Project Structure
+
+```
+/
+├── app
+│    ├── overview           # landing page
+│    │    └── scheduler
+│    │      └── page.tsx
+│    │    └── layout.tsx
+│    ├── favicon.ico           # landing page
+│    ├── globals.css           # landing page
+│    ├── layout.tsx           # landing page
+│    ├── page.tsx           # landing page
+├── components           # common-used components
+│    ├── Login    # landing page component
+│    │    └── phone-verify.tsx
+│    │    └── sms-verify.tsx
+│    │    └── signup.tsx
+│    │    ...
+│    └── ui              # shadcn/uiのコンポーネント
+├── hooks                # custom-hooks
+├── lib                  # library specific functions (not including data acquisition)
+├── utils                # commonly used utility functions
+├── public               # static files
+│
+├── middleware.ts        # Next.jsmiddleware
+├── .env.example         # env variable sample file
+├── .gitignore           # Git excluded files configuration file
+├── .prettierrc.json     # Prettier configurationfile
+├── .dockerignore        # Dockerexcluded files configuratin file
+├── components.json      # shadcn/ui configuratin file
+├── Dockerfile           # Docker image configuration file
+├── eslint.config.mjs    # ESLint configuration file
+├── docker-compose.yml   # Docker startup configuration file
+├── next.config.js       # Next.js configuratin file
+├── package.json         # Package configuration file
+├── package-lock.json    # Package lock file
+├── playwright.config.ts # Playwright configuration file
+├── postcss.config.mjs   # PostCSS configuration file
+├── tailwind.config.ts   # Tailwind CSS configuration file
+└── tsconfig.json        # TypeScript configuration file
+```
 
 ## Getting Started
+
+First, install packates:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
 
 First, run the development server:
 

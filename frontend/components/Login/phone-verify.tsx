@@ -19,15 +19,18 @@ import { ICountry } from "@/lib/definition";
 
 export default function PhoneVerify({
   selectedCountry,
-  setSelectedCountry,
   phoneNumber,
+  isLoading,
+  setSelectedCountry,
   setPhoneNumber,
   setCurrentScreen,
   setResendTimer,
 }: {
   selectedCountry: ICountry;
-  setSelectedCountry: (selectedCountry: ICountry) => void;
   phoneNumber: string;
+  isLoading: boolean;
+  // setIsLoading: (isLoading: boolean) => void;
+  setSelectedCountry: (selectedCountry: ICountry) => void;
   setPhoneNumber: (phoneNumber: string) => void;
   setCurrentScreen: (currentScreen: "phone" | "verify") => void;
   setResendTimer: (resendTimer: number) => void;
@@ -126,6 +129,7 @@ export default function PhoneVerify({
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className="flex-1 h-12 border-2 border-gray-200 focus:border-purple-500 text-base"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -133,9 +137,10 @@ export default function PhoneVerify({
             {/* Submit Button */}
             <Button
               type="submit"
+              disabled={isLoading}
               className="w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium text-base shadow-lg hover:shadow-xl transition-all duration-200"
             >
-              Send Verification Code
+              {isLoading ? "Checking..." : "Send Verification Code"}
             </Button>
           </form>
         </CardContent>
