@@ -63,10 +63,19 @@ alembic revision --autogenerate -m "Add your message here"
 
 ## 🚀 Running the Server
 
-Replace app.main with your actual app entry point if different.
+Inside of Project Directory.
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn main:app --reload
+```
+
+## 🚀 Running the Scheduler
+
+Inside of Project Directory.
+
+```bash
+python scheduler_worker.py
+
 ```
 
 ## 📁 Project Structure

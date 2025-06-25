@@ -6,11 +6,9 @@ from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
-# database.pyから必要な関数をインポート
 from database import create_db_url, setup_ssh_tunnel
 from models.base import Base
 
-# .envファイルの読み込み
 load_dotenv()
 
 ENV = os.getenv("ENV")

@@ -5,7 +5,7 @@ from logging.handlers import HTTPHandler
 from datetime import datetime, timezone, timedelta
 
 HOST = "hooks.slack.com"
-PATH = os.getenv("SLACK_WEBHOOK_URL")  # Webhook URLを指定
+PATH = os.getenv("SLACK_WEBHOOK_URL")  
 
 class SlackHandler(HTTPHandler):
     def __init__(self):
@@ -22,7 +22,6 @@ class JSTFormatter(Formatter):
             return dt.strftime(datefmt)
         return dt.strftime("%Y-%m-%d %H:%M:%S")
 
-# ログ設定
 logging_config = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -57,10 +56,7 @@ logging_config = {
     }
 }
 
-# 設定を適用
 dictConfig(logging_config)
 
-# ロガー取得関数
 def get_logger(name: str):
-    """名前付きロガーを取得する"""
     return getLogger(name)
