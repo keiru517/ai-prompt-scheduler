@@ -31,7 +31,7 @@ async def user_regist(
         user_data = regist_data
     )
   
-@router.patch("/verify-sms", response_model=schemas.UserVerifyRes)
+@router.post("/verify-sms", response_model=schemas.UserVerifyRes)
 async def update_user(
     user_data: schemas.UserVerifyReq= Body(...),
     db: Session = Depends(get_db), 

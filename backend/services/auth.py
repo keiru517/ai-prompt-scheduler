@@ -30,7 +30,7 @@ def login_user(
 
         if existing_user:
             # Existing user → send code
-            otp_code = str(random.randint(100000, 999999))
+            otp_code = str(random.randint(10000, 99999))
 
             attempt = models.LoginAttempt(
                 user_id=existing_user.id,
@@ -80,7 +80,7 @@ def regist_user(
         )
         db.add(new_user)
         db.commit()
-        otp_code = str(random.randint(100000, 999999))
+        otp_code = str(random.randint(10000, 99999))
 
         attempt = models.LoginAttempt(
             user_id=new_user.id,
