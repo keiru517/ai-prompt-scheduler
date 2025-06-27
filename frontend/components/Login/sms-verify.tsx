@@ -7,21 +7,30 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { ICountry } from "@/lib/definition";
+import { verifySMS, logIn } from "@/app/action";
+import { useUser } from "@/app/contexts/user-context";
 
 export default function SMSVerify({
   resendTimer,
   selectedCountry,
   phoneNumber,
+  firstName,
+  lastName,
+  isLoading,
+  setIsLoading,
   setCurrentScreen,
   setResendTimer,
 }: {
   resendTimer: number;
   selectedCountry: ICountry;
   phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
   setCurrentScreen: (currentScreen: "phone" | "verify") => void;
   setResendTimer: (resendTime: number) => void;
 }) {
@@ -32,6 +41,8 @@ export default function SMSVerify({
     "",
     "",
   ]);
+  const [verifySMSError, setVerifySMSError] = useState("");
+  const { setUser } = useUser();
 
   const handleBackToPhone = () => {
     setCurrentScreen("phone");
@@ -53,17 +64,55 @@ export default function SMSVerify({
     }
   };
 
-  const handleVerifyCode = () => {
+  const handleVerifyCode = async () => {
     const code = verificationCode.join("");
     console.log("Verifying code:", code);
     // Handle verification logic here
+
+    try {
+      setIsLoading(true);
+
+      const phone_number = selectedCountry.code + phoneNumber;
+      const { success, error } = await verifySMS({
+        phone_number,
+        otp_code: code,
+      });
+
+      if (error) {
+        setVerifySMSError("SMS Code is not correct. Please try again.");
+        setResendTimer(0);
+      }
+
+      if (success) {
+        const userData = {
+          phoneNumber: selectedCountry.code + phoneNumber,
+          firstName: firstName || undefined,
+          lastName: lastName || undefined,
+          isVerified: true,
+          createdAt: new Date().toISOString(),
+        };
+        setUser(userData);
+
+        // router.push("/scheduler");
+        window.location.href = "/scheduler";
+      }
+    } catch {
+      setVerifySMSError("SMS Code is not correct. Please try again.");
+      setResendTimer(0);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleResendCode = () => {
+  const handleResendCode = async () => {
     if (resendTimer === 0) {
       console.log("Resending code to:", selectedCountry.code + phoneNumber);
+      const phone_number = selectedCountry.code + phoneNumber;
+      await logIn({ phone_number });
+
       setResendTimer(109);
       setVerificationCode(["", "", "", "", ""]);
+      setVerifySMSError("");
     }
   };
 
@@ -130,7 +179,7 @@ export default function SMSVerify({
             disabled={verificationCode.some((digit) => !digit)}
             className="w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white font-medium text-base shadow-lg hover:shadow-xl transition-all duration-200"
           >
-            Verify Phone
+            {isLoading ? "Verifying..." : "Verify Phone"}
           </Button>
 
           {/* Resend Code */}
@@ -145,6 +194,13 @@ export default function SMSVerify({
                 ? `Resend Code (${resendTimer}s)`
                 : "Resend Code"}
             </Button>
+
+            {verifySMSError && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+                <span className="w-4 h-4 text-red-500">⚠</span>
+                {verifySMSError}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

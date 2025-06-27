@@ -1,12 +1,27 @@
 "use client";
 
 import type React from "react";
-import { Calendar, Star, Moon, Sun } from "lucide-react";
+import {
+  Calendar,
+  Star,
+  Moon,
+  Sun,
+  CreditCard,
+  User,
+  LogOut,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { useUser } from "@/app/contexts/user-context";
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
@@ -25,6 +40,8 @@ function ThemeToggle() {
 }
 
 export default function Header() {
+  const { user, logout } = useUser();
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -52,12 +69,61 @@ export default function Header() {
 
           {/* User Avatars and Theme Toggle */}
           <div className="flex items-center gap-2">
-            <Avatar className="w-8 h-8">
-              <AvatarImage src="/placeholder.svg?height=32&width=32" />
-              <AvatarFallback className="bg-blue-100 text-blue-600 text-xs dark:bg-blue-900 dark:text-blue-300">
-                A
-              </AvatarFallback>
-            </Avatar>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="w-8 h-8 cursor-pointer hover:ring-2 hover:ring-purple-500 hover:ring-offset-2 transition-all">
+                  <AvatarImage src="/placeholder.svg?height=32&width=32" />
+                  <AvatarFallback className="bg-blue-100 text-blue-600 text-xs dark:bg-blue-900 dark:text-blue-300 font-semibold">
+                    {user?.firstName
+                      ? user.firstName[0].toUpperCase()
+                      : user?.phoneNumber?.[0] || "U"}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="flex items-center gap-2 p-2">
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage src="/placeholder.svg?height=32&width=32" />
+                    <AvatarFallback className="bg-blue-100 text-blue-600 text-xs dark:bg-blue-900 dark:text-blue-300 font-semibold">
+                      {user?.firstName
+                        ? user.firstName[0].toUpperCase()
+                        : user?.phoneNumber?.[0] || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {user?.firstName
+                        ? `${user.firstName} ${user.lastName || ""}`.trim()
+                        : "User"}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.phoneNumber}
+                    </p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => (window.location.href = "/billing")}
+                >
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  <span>Billing</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => (window.location.href = "/profile")}
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={logout}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <ThemeToggle />
           </div>
         </div>

@@ -18,6 +18,8 @@ export default function PhoneVerificationPage() {
   >("phone");
   const [resendTimer, setResendTimer] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -63,6 +65,7 @@ export default function PhoneVerificationPage() {
               selectedCountry={selectedCountry}
               phoneNumber={phoneNumber}
               isLoading={isLoading}
+              setIsLoading={setIsLoading}
               setSelectedCountry={setSelectedCountry}
               setPhoneNumber={setPhoneNumber}
               setCurrentScreen={setCurrentScreen}
@@ -74,6 +77,10 @@ export default function PhoneVerificationPage() {
             selectedCountry={selectedCountry}
             phoneNumber={phoneNumber}
             isLoading={isLoading}
+            firstName={firstName}
+            lastName={lastName}
+            setFirstName={setFirstName}
+            setLastName={setLastName}
             setIsLoading={setIsLoading}
             setCurrentScreen={setCurrentScreen}
             setResendTimer={setResendTimer}
@@ -83,8 +90,12 @@ export default function PhoneVerificationPage() {
             resendTimer={resendTimer}
             selectedCountry={selectedCountry}
             phoneNumber={phoneNumber}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
             setCurrentScreen={setCurrentScreen}
             setResendTimer={setResendTimer}
+            firstName={firstName}
+            lastName={lastName}
           />
         )}
       </div>

@@ -10,11 +10,16 @@ import { Label } from "@/components/ui/label";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ICountry } from "@/lib/definition";
+import { regist } from "@/app/action";
 
 export default function SignUp({
   selectedCountry,
   phoneNumber,
   isLoading,
+  firstName,
+  lastName,
+  setFirstName,
+  setLastName,
   setIsLoading,
   setCurrentScreen,
   setResendTimer,
@@ -22,12 +27,15 @@ export default function SignUp({
   selectedCountry: ICountry;
   phoneNumber: string;
   isLoading: boolean;
+  firstName: string;
+  lastName: string;
+  setFirstName: (firstName: string) => void;
+  setLastName: (lastName: string) => void;
   setIsLoading: (isLoading: boolean) => void;
   setCurrentScreen: (currentScreen: "phone" | "verify" | "signup") => void;
   setResendTimer: (resendTimer: number) => void;
 }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [registError, setRegistError] = useState("");
 
   const handleBackToPhoneFromSignup = () => {
     setCurrentScreen("phone");
@@ -38,29 +46,26 @@ export default function SignUp({
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setRegistError("");
 
     try {
-      // Create new user profile
-      const response = await fetch("/api/create-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          phoneNumber: selectedCountry.code + phoneNumber,
-          firstName,
-          lastName,
-        }),
-      });
+      const phone_number = selectedCountry.code + phoneNumber;
+      const { error, success } = await regist({
+        phone_number,
+        first_name: firstName,
+        last_name: lastName,
+      }); // Create new user profile
 
-      if (response.ok) {
-        console.log("User profile created, sending verification code");
-        // After successful signup, go to verification
+      if (error) {
+        setRegistError("Failed to verify phone number. Please try again.");
+      }
+
+      if (success) {
         setCurrentScreen("verify");
         setResendTimer(109);
       }
-    } catch (error) {
-      console.error("Error creating user:", error);
+    } catch {
+      setRegistError("Failed to Regist. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -144,6 +149,13 @@ export default function SignUp({
             >
               {isLoading ? "Creating Profile..." : "Continue"}
             </Button>
+
+            {registError && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+                <span className="w-4 h-4 text-red-500">⚠</span>
+                {registError}
+              </div>
+            )}
           </form>
         </CardContent>
       </Card>

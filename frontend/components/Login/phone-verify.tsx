@@ -2,6 +2,7 @@
 
 import type React from "react";
 import Image from "next/image";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,11 +17,13 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { countries } from "@/lib/constant";
 import { ICountry } from "@/lib/definition";
+import { logIn } from "@/app/action";
 
 export default function PhoneVerify({
   selectedCountry,
   phoneNumber,
   isLoading,
+  setIsLoading,
   setSelectedCountry,
   setPhoneNumber,
   setCurrentScreen,
@@ -29,22 +32,72 @@ export default function PhoneVerify({
   selectedCountry: ICountry;
   phoneNumber: string;
   isLoading: boolean;
-  // setIsLoading: (isLoading: boolean) => void;
+  setIsLoading: (isLoading: boolean) => void;
   setSelectedCountry: (selectedCountry: ICountry) => void;
   setPhoneNumber: (phoneNumber: string) => void;
-  setCurrentScreen: (currentScreen: "phone" | "verify") => void;
+  setCurrentScreen: (currentScreen: "phone" | "verify" | "signup") => void;
   setResendTimer: (resendTimer: number) => void;
 }) {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [phoneNumberVerifyError, setPhoneNumberVerifyError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    console.info("phonenumhber.......", phoneNumber);
+    if (phoneNumber === "") return;
     e.preventDefault();
-    console.log(
-      "Sending verification code to:",
-      selectedCountry.code + phoneNumber
-    );
-    setCurrentScreen("verify");
-    setResendTimer(109); // Start 109 second countdown
+    setPhoneNumberVerifyError("");
+    setPhoneError("");
+
+    if (!validatePhoneNumber(phoneNumber)) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const phone_number = selectedCountry.code + phoneNumber;
+      const { data, error } = await logIn({ phone_number });
+      if (error) {
+        setPhoneNumberVerifyError(
+          "Failed to verify phone number. Please try again."
+        );
+      }
+
+      if (data?.message === "VERIFY_CODE_SENT") setCurrentScreen("verify");
+      else if (data?.message === "REGISTER_REQUIRED")
+        setCurrentScreen("signup");
+
+      setResendTimer(109); // Start 109 second countdown
+    } catch {
+      setPhoneNumberVerifyError(
+        "Failed to verify phone number. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  const validatePhoneNumber = (phone: string): boolean => {
+    if (phoneNumber === "") return false;
+    // Remove all non-digit characters for validation
+    const cleanPhone = phone.replace(/\D/g, "");
+
+    // Check if phone number has appropriate length (7-15 digits)
+    if (cleanPhone.length < 7 || cleanPhone.length > 15) {
+      setPhoneError("Phone number must be between 7-15 digits");
+      return false;
+    }
+
+    // Basic format validation - ensure it contains only numbers, spaces, dashes, parentheses, and plus
+    const phoneRegex = /^[+]?[\d\s\-$$$$]+$/;
+    if (!phoneRegex.test(phone)) {
+      setPhoneError("Please enter a valid phone number format");
+      return false;
+    }
+
+    setPhoneError("");
+    return true;
+  };
   return (
     <>
       {" "}
@@ -126,13 +179,26 @@ export default function PhoneVerify({
                   type="tel"
                   placeholder="(000) 000-0000"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) => {
+                    setPhoneNumber(e.target.value);
+                    if (phoneError) {
+                      validatePhoneNumber(e.target.value);
+                    }
+                  }}
+                  onBlur={() => validatePhoneNumber(phoneNumber)}
                   className="flex-1 h-12 border-2 border-gray-200 focus:border-purple-500 text-base"
                   required
                   disabled={isLoading}
                 />
               </div>
             </div>
+
+            {phoneError && (
+              <div className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                <span className="w-4 h-4 text-red-500">⚠</span>
+                {phoneError}
+              </div>
+            )}
 
             {/* Submit Button */}
             <Button
@@ -142,6 +208,12 @@ export default function PhoneVerify({
             >
               {isLoading ? "Checking..." : "Send Verification Code"}
             </Button>
+            {phoneNumberVerifyError && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+                <span className="w-4 h-4 text-red-500">⚠</span>
+                {phoneNumberVerifyError}
+              </div>
+            )}
           </form>
         </CardContent>
       </Card>
