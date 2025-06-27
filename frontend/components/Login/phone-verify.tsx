@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-import { countries } from "@/lib/countries";
+import { countries } from "@/lib/constant";
 import { ICountry } from "@/lib/definition";
 
 export default function PhoneVerify({

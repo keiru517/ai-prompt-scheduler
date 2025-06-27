@@ -5,17 +5,17 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { Calendar, Star } from "lucide-react";
 
-import { countries } from "@/lib/countries";
-import PhoneVerify from "@/components/Login/phone-verify";
-import SMSVerify from "@/components/Login/sms-verify";
-import SignUp from "@/components/Login/singup";
+import { countries } from "@/lib/constant";
+import PhoneVerify from "@/components/login/phone-verify";
+import SMSVerify from "@/components/login/sms-verify";
+import SignUp from "@/components/login/singup";
 
 export default function PhoneVerificationPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
   const [currentScreen, setCurrentScreen] = useState<
     "phone" | "verify" | "signup"
-  >("signup");
+  >("phone");
   const [resendTimer, setResendTimer] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 

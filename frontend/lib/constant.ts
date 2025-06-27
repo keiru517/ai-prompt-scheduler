@@ -1,0 +1,217 @@
+import { ICountry } from "./definition";
+import { IPrompt, IContact, IPlans } from "./definition";
+
+export const countries: ICountry[] = [
+  { code: "+1", name: "United States", iso: "us" },
+  { code: "+1", name: "Canada", iso: "ca" },
+  { code: "+44", name: "United Kingdom", iso: "gb" },
+  { code: "+33", name: "France", iso: "fr" },
+  { code: "+49", name: "Germany", iso: "de" },
+  { code: "+39", name: "Italy", iso: "it" },
+  { code: "+34", name: "Spain", iso: "es" },
+  { code: "+31", name: "Netherlands", iso: "nl" },
+  { code: "+41", name: "Switzerland", iso: "ch" },
+  { code: "+43", name: "Austria", iso: "at" },
+  { code: "+32", name: "Belgium", iso: "be" },
+  { code: "+45", name: "Denmark", iso: "dk" },
+  { code: "+46", name: "Sweden", iso: "se" },
+  { code: "+47", name: "Norway", iso: "no" },
+  { code: "+358", name: "Finland", iso: "fi" },
+  { code: "+351", name: "Portugal", iso: "pt" },
+  { code: "+30", name: "Greece", iso: "gr" },
+  { code: "+48", name: "Poland", iso: "pl" },
+  { code: "+420", name: "Czech Republic", iso: "cz" },
+  { code: "+36", name: "Hungary", iso: "hu" },
+  { code: "+7", name: "Russia", iso: "ru" },
+  { code: "+81", name: "Japan", iso: "jp" },
+  { code: "+82", name: "South Korea", iso: "kr" },
+  { code: "+86", name: "China", iso: "cn" },
+  { code: "+91", name: "India", iso: "in" },
+  { code: "+65", name: "Singapore", iso: "sg" },
+  { code: "+852", name: "Hong Kong", iso: "hk" },
+  { code: "+886", name: "Taiwan", iso: "tw" },
+  { code: "+60", name: "Malaysia", iso: "my" },
+  { code: "+66", name: "Thailand", iso: "th" },
+  { code: "+84", name: "Vietnam", iso: "vn" },
+  { code: "+63", name: "Philippines", iso: "ph" },
+  { code: "+62", name: "Indonesia", iso: "id" },
+  { code: "+61", name: "Australia", iso: "au" },
+  { code: "+64", name: "New Zealand", iso: "nz" },
+  { code: "+27", name: "South Africa", iso: "za" },
+  { code: "+20", name: "Egypt", iso: "eg" },
+  { code: "+234", name: "Nigeria", iso: "ng" },
+  { code: "+254", name: "Kenya", iso: "ke" },
+  { code: "+55", name: "Brazil", iso: "br" },
+  { code: "+52", name: "Mexico", iso: "mx" },
+  { code: "+54", name: "Argentina", iso: "ar" },
+  { code: "+56", name: "Chile", iso: "cl" },
+  { code: "+57", name: "Colombia", iso: "co" },
+  { code: "+51", name: "Peru", iso: "pe" },
+  { code: "+58", name: "Venezuela", iso: "ve" },
+  { code: "+971", name: "UAE", iso: "ae" },
+  { code: "+966", name: "Saudi Arabia", iso: "sa" },
+  { code: "+972", name: "Israel", iso: "il" },
+  { code: "+90", name: "Turkey", iso: "tr" },
+];
+
+export const daysOfWeek = [
+  { id: "mon", label: "Mon" },
+  { id: "tue", label: "Tue" },
+  { id: "wed", label: "Wed" },
+  { id: "thu", label: "Thu" },
+  { id: "fri", label: "Fri" },
+  { id: "sat", label: "Sat" },
+  { id: "sun", label: "Sun" },
+];
+
+export const mockPrompts: IPrompt[] = [
+  {
+    id: "1",
+    title: "Daily Wellness Check",
+    description:
+      "Send me a motivational message about staying healthy and productive today",
+    isActive: true,
+    isScheduled: false,
+    lastSent: "183 days ago",
+    recipients: 3,
+  },
+  {
+    id: "2",
+    title: "Weekly Team Update",
+    description:
+      "Generate a summary of this week's accomplishments and goals for next week",
+    isActive: false,
+    isScheduled: false,
+    author: "Sarah Johnson",
+    lastSent: "189 days ago",
+    recipients: 4,
+  },
+  {
+    id: "3",
+    title: "Monthly Goal Review",
+    description:
+      "Help me reflect on this month's progress and set intentions for next month",
+    isActive: true,
+    isScheduled: false,
+    lastSent: "196 days ago",
+    recipients: 1,
+  },
+  {
+    id: "4",
+    title: "Mindfulness Reminder",
+    description:
+      "Take 5 minutes to practice mindfulness. Focus on your breath and let go of today's stress.",
+    isActive: true,
+    isScheduled: false,
+    author: "Michael Chen",
+    lastSent: "182 days ago",
+    recipients: 0,
+  },
+];
+
+export const mockContacts: IContact[] = [
+  {
+    id: "1",
+    name: "Sarah Johnson",
+    phone: "+1 (555) 987-6543",
+    selected: false,
+  },
+  {
+    id: "2",
+    name: "Michael Chen",
+    phone: "+1 (555) 234-5678",
+    selected: false,
+  },
+  {
+    id: "3",
+    name: "Emily Rodriguez",
+    phone: "+1 (555) 345-6789",
+    selected: true,
+  },
+  { id: "4", name: "David Kim", phone: "+1 (555) 456-7890", selected: false },
+  {
+    id: "5",
+    name: "Lisa Thompson",
+    phone: "+44 20 7946 0958",
+    selected: false,
+  },
+];
+
+export const currentUsage = {
+  tokensUsed: 1250,
+  tokensLimit: 5000,
+  resetDate: "7/16/2025",
+  messagesSent: 8,
+  plan: "Free Plan",
+};
+
+export const plans: IPlans = {
+  monthly: [
+    {
+      id: "pro-monthly",
+      name: "Pro Monthly",
+      price: 19,
+      tokens: "50k",
+      tokensLimit: 50000,
+      popular: true,
+      features: [
+        "Up to 50,000 tokens/month",
+        "Unlimited prompts",
+        "Priority SMS delivery",
+        "Advanced scheduling",
+        "Email support",
+      ],
+    },
+    {
+      id: "enterprise",
+      name: "Enterprise",
+      price: 99,
+      tokens: "250k",
+      tokensLimit: 250000,
+      popular: false,
+      features: [
+        "Up to 250,000 tokens/month",
+        "Unlimited prompts",
+        "White-label SMS",
+        "Custom scheduling",
+        "Dedicated support",
+        "API access",
+      ],
+    },
+  ],
+  annual: [
+    {
+      id: "pro-annual",
+      name: "Pro Annual",
+      price: 190, // $19 * 12 * 0.83 (17% discount)
+      originalPrice: 228,
+      tokens: "50k",
+      tokensLimit: 50000,
+      popular: true,
+      features: [
+        "Up to 50,000 tokens/month",
+        "Unlimited prompts",
+        "Priority SMS delivery",
+        "Advanced scheduling",
+        "Email support",
+      ],
+    },
+    {
+      id: "enterprise-annual",
+      name: "Enterprise Annual",
+      price: 990, // $99 * 12 * 0.83 (17% discount)
+      originalPrice: 1188,
+      tokens: "250k",
+      tokensLimit: 250000,
+      popular: false,
+      features: [
+        "Up to 250,000 tokens/month",
+        "Unlimited prompts",
+        "White-label SMS",
+        "Custom scheduling",
+        "Dedicated support",
+        "API access",
+      ],
+    },
+  ],
+};
