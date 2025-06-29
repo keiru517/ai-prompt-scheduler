@@ -1,6 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from datetime import datetime
+from datetime import time
 from enum import Enum
 
 class ScheduleFrequency(str, Enum):
@@ -38,7 +38,7 @@ class PromptCreateReq(BaseModel):
         example="weekly", 
         description="How often to send the prompt"
     )
-    schedule_time: datetime = Field(
+    schedule_time: time = Field(
         ..., 
         example="2025-06-20T08:30:00", 
         description="Scheduled time in ISO 8601 format"
@@ -66,3 +66,49 @@ class PromptCreateReq(BaseModel):
 
 class PromptCreateRes(BaseModel):
     message:str
+
+class PromptList(BaseModel):
+    id: str
+    title:str
+    description:str
+    isActive:bool
+    isScheduled: bool
+    lastSent:str
+    recipients:int
+    schedule_frequency:str
+    schedule_time:time
+    schedule_repeat_period: Optional[int]
+    schedule_week_day:Optional[List[str]]
+
+class PromptListRes (BaseModel):
+    prompt_list: List[PromptList]
+
+class UserList (BaseModel):
+    id:str
+    phone:str
+    name:str
+    selected:bool
+
+class UserListRes (BaseModel):
+    user_list: List[UserList]
+
+class PromptStatusUpdateReq (BaseModel):
+    id:str
+
+class PromptStatusUpdateRes (BaseModel):
+    message:str
+
+class PromptScheduleUpdateReq(BaseModel):
+    id: str
+    schedule_frequency: str
+    schedule_time: time
+    schedule_repeat_period: int
+    schedule_week_day:List[str]
+
+class PromptScheduleUpdateRes(BaseModel):
+    message:str
+
+class PromptDeleteRes(BaseModel):
+    message:str
+class PromptDeleteReq(BaseModel):
+    id:str

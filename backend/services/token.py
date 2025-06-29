@@ -39,11 +39,11 @@ async def verify_token(db: Session = Depends(get_db), credentials: HTTPAuthoriza
 
         payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
 
-        admin_id = payload.get("sub")
-        if admin_id is None:
+        phone_number = payload.get("sub")
+        if phone_number is None:
             raise ValueError
         
-        return admin_id
+        return phone_number
     except JWTError:
         logger.error("Invalid authentication credentials")
         raise HTTPException(

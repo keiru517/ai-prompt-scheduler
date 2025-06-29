@@ -141,6 +141,8 @@ def verify_user(
         access_token = token.create_access_token(
             data={
                 "sub": existing_user.phone_number,
+                "first_name":existing_user.first_name,
+                "last_name": existing_user.last_name,
             },
             expires_delta=access_token_expires,
         )
