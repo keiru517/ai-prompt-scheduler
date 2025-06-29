@@ -36,6 +36,10 @@ export interface IPrompt {
   author?: string;
   lastSent?: string;
   recipients?: number;
+  schedule_frequency: string;
+  schedule_time: string;
+  schedule_repeat_period?: number;
+  schedule_week_day?: string[];
 }
 
 export interface IPlan {
@@ -72,6 +76,8 @@ export type ActionResult<T> = {
 
 export interface ILogInRes {
   message: string;
+  access_token: string;
+  toekn_type: string;
 }
 
 export interface IRegistRes {
@@ -109,4 +115,43 @@ export interface IUserContextType {
   isAuthenticated: boolean;
   logout: () => void;
   updateUser: (updates: Partial<IUser>) => void;
+}
+
+export interface ISchedulerList {
+  prompt_list: IPrompt[];
+}
+
+export interface IUserList {
+  user_list: IContact[];
+}
+
+export interface ICreatePromptReq {
+  phone_number: string;
+  title: string;
+  prompt: string;
+  schedule_frequency: string;
+  schedule_time: string;
+  schedule_repeat_period: number;
+  schedule_week_day: string[];
+  is_active: boolean;
+  recipients: number[];
+}
+
+export interface IUpdatePromptStatus {
+  id: string;
+  status?: boolean;
+}
+
+export interface IDecodedToken {
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+}
+
+export interface IUpdatePromptSchedule {
+  id: string;
+  schedule_frequency: string;
+  schedule_time: string;
+  schedule_repeat_period: number;
+  schedule_week_day: string[];
 }

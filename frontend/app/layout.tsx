@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { UserProvider } from "./contexts/user-context";
+import { ToastProvider } from "./contexts/toast-context";
+import { appConfig } from "./config";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Prompt Scheduler",
+  title: appConfig.appTitle,
   description: "AI Prompt Scheduler",
 };
 
@@ -36,7 +38,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <UserProvider>{children}</UserProvider>{" "}
+          <UserProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </UserProvider>
         </ThemeProvider>
       </body>
     </html>

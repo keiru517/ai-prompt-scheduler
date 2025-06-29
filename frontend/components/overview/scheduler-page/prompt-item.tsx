@@ -12,6 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { IPrompt, IScheduleData } from "@/lib/definition";
+import {
+  deletePrompt,
+  getSchedulerList,
+  updatePromptStatus,
+} from "@/app/(overview)/scheduler/action";
+import { useToast } from "@/app/contexts/toast-context";
 
 export default function PromptItem({
   prompt,
@@ -30,29 +36,54 @@ export default function PromptItem({
   setScheduleData: (scheduleData: IScheduleData) => void;
   setIsEditScheduleModalOpen: (isEditScheduleModalOpen: boolean) => void;
 }) {
+  const { success, error } = useToast();
+
   const handlePromptClick = (prompt: IPrompt) => {
     setSelectedPromptDetails(prompt);
     setIsPromptDetailsModalOpen(true);
   };
 
-  const togglePromptStatus = (id: string) => {
+  const togglePromptStatus = async (id: string) => {
     setPrompts((prev) =>
       prev.map((prompt) =>
         prompt.id === id ? { ...prompt, isActive: !prompt.isActive } : prompt
       )
     );
+    await updatePromptStatus({ id });
   };
 
   const handleEditSchedule = (promptId: string) => {
     setEditingPromptId(promptId);
     // Load existing schedule data for the prompt
+
     setScheduleData({
-      frequency: "weekly",
-      time: "08:00",
-      repeatEvery: 1,
-      selectedDays: ["mon", "wed", "fri"],
+      frequency: prompt.schedule_frequency,
+      time: prompt.schedule_time,
+      repeatEvery: prompt.schedule_repeat_period ?? 0,
+      selectedDays: prompt.schedule_week_day ?? [],
     });
     setIsEditScheduleModalOpen(true);
+  };
+
+  const handleDeletePrompt = async (promptId: string) => {
+    try {
+      const { success: deleteSuccess } = await deletePrompt(promptId);
+
+      if (deleteSuccess) {
+        success("Prompt Deleted", "Your prompt has been successfully Deleted");
+
+        const { data, success: listSuccess } = await getSchedulerList();
+        if (data && listSuccess) setPrompts(data.prompt_list);
+      } else {
+        error("Delete Failed", "Failed to delete schedule. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      error(
+        "Unexpected Error",
+        "An unexpected error occurred. Please try again."
+      );
+    }
   };
 
   const getStatusBadge = (prompt: IPrompt) => {
@@ -112,13 +143,22 @@ export default function PromptItem({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
-                    onClick={() => handleEditSchedule(prompt.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditSchedule(prompt.id);
+                    }}
                   >
                     Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem>Duplicate</DropdownMenuItem>
                   <DropdownMenuItem>Schedule</DropdownMenuItem>
-                  <DropdownMenuItem className="text-red-600">
+                  <DropdownMenuItem
+                    className="text-red-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeletePrompt(prompt.id);
+                    }}
+                  >
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>

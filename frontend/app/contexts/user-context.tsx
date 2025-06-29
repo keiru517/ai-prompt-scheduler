@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 import { IUser, IUserContextType } from "@/lib/definition";
 import { userLogout } from "../action";
+import { useTheme } from "next-themes";
 
 const UserContext = createContext<IUserContextType | undefined>(undefined);
 
@@ -22,6 +23,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const [user, setUserState] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const { setTheme } = useTheme();
 
   // Load user from localStorage on mount
   useEffect(() => {
@@ -60,6 +62,7 @@ export function UserProvider({ children }: UserProviderProps) {
     // You might want to call an API endpoint to invalidate the session
     await userLogout();
     setUser(null);
+    setTheme("light");
 
     console.log("User logged out");
     router.push("/");
@@ -78,12 +81,14 @@ export function UserProvider({ children }: UserProviderProps) {
   // Don't render children until we've loaded the user state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
+      // TODO: user state loading
+      // <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      //   <div className="text-center space-y-4">
+      //     <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+      //     <p className="text-gray-600">Loading...</p>
+      //   </div>
+      // </div>
+      <></>
     );
   }
 

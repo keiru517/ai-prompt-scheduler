@@ -109,7 +109,7 @@ export default function Header() {
                   <span>Billing</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => (window.location.href = "/profile")}
+                  onClick={() => (window.location.href = "/scheduler")}
                 >
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>

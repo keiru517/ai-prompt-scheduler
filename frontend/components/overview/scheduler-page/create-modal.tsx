@@ -19,21 +19,80 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { INewPrompt } from "@/lib/definition";
+import { IContact, INewPrompt, IPrompt } from "@/lib/definition";
+import {
+  createPrompt,
+  getSchedulerList,
+} from "@/app/(overview)/scheduler/action";
+import { useUser } from "@/app/contexts/user-context";
 
 export default function CreateModal({
+  contacts,
+  phone_number,
   newPrompt,
   setNewPrompt,
   isCreateModalOpen,
   setIsCreateModalOpen,
   setIsContactsModalOpen,
+  setPrompts,
+  setContacts,
 }: {
+  contacts: IContact[];
+  phone_number: string | undefined;
   newPrompt: INewPrompt;
   setNewPrompt: React.Dispatch<React.SetStateAction<INewPrompt>>;
   isCreateModalOpen: boolean;
   setIsCreateModalOpen: (isCreateModalOpen: boolean) => void;
   setIsContactsModalOpen: (isContactsModalOpen: boolean) => void;
+  setPrompts: (prmpts: IPrompt[]) => void;
+  setContacts: (contacts: IContact[]) => void;
 }) {
+  const { user } = useUser();
+
+  const handleCreateModal = async () => {
+    if (!phone_number) return;
+    console.log("Creating prompt:", newPrompt);
+
+    setIsCreateModalOpen(false);
+    // Reset form
+
+    const selectedIds = contacts
+      .filter((contact) => contact.selected)
+      .map((contact) => Number(contact.id));
+    try {
+      const { success } = await createPrompt({
+        phone_number: phone_number,
+        title: newPrompt.title,
+        prompt: newPrompt.prompt,
+        schedule_frequency: newPrompt.frequency,
+        schedule_time: newPrompt.time,
+        schedule_repeat_period: 0,
+        schedule_week_day:
+          newPrompt.frequency === "weekly"
+            ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            : [],
+        is_active: true,
+        recipients: selectedIds,
+      });
+      if (success) {
+        const { data, success } = await getSchedulerList();
+        if (success && data) setPrompts(data?.prompt_list);
+      }
+      setNewPrompt({
+        title: "",
+        prompt: "",
+        frequency: "",
+        time: "",
+        sendToSelf: true,
+        selectedContacts: 0,
+      });
+
+      setContacts([]);
+    } catch (error) {
+      console.info(error);
+    }
+  };
+
   return (
     <>
       {" "}
@@ -110,18 +169,6 @@ export default function CreateModal({
                       >
                         Weekly
                       </SelectItem>
-                      <SelectItem
-                        value="monthly"
-                        className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
-                      >
-                        Monthly
-                      </SelectItem>
-                      <SelectItem
-                        value="custom"
-                        className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
-                      >
-                        Custom
-                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -167,9 +214,22 @@ export default function CreateModal({
                 </div>
                 <Checkbox
                   checked={newPrompt.sendToSelf}
-                  onCheckedChange={(checked) =>
-                    setNewPrompt((prev) => ({ ...prev, sendToSelf: !!checked }))
-                  }
+                  onCheckedChange={(checked) => {
+                    setNewPrompt((prev) => ({
+                      ...prev,
+                      sendToSelf: !!checked,
+                    }));
+
+                    if (!user) return;
+
+                    const updatedContacts = contacts.map((contact) =>
+                      contact.phone === user.phoneNumber
+                        ? { ...contact, selected: !!checked }
+                        : contact
+                    );
+
+                    setContacts(updatedContacts); // assuming you have setContacts from useState
+                  }}
                   className="border-gray-400 dark:border-gray-500 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
                 />
               </div>
@@ -207,20 +267,7 @@ export default function CreateModal({
                 Cancel
               </Button>
               <Button
-                onClick={() => {
-                  // Handle create prompt logic here
-                  console.log("Creating prompt:", newPrompt);
-                  setIsCreateModalOpen(false);
-                  // Reset form
-                  setNewPrompt({
-                    title: "",
-                    prompt: "",
-                    frequency: "",
-                    time: "",
-                    sendToSelf: true,
-                    selectedContacts: 0,
-                  });
-                }}
+                onClick={handleCreateModal}
                 className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
               >
                 Create Prompt

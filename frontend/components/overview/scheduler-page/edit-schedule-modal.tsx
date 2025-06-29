@@ -1,5 +1,4 @@
 "use client";
-
 import { Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -17,8 +16,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { IScheduleData } from "@/lib/definition";
+import { IPrompt, IScheduleData } from "@/lib/definition";
 import { daysOfWeek } from "@/lib/constant";
+import {
+  getSchedulerList,
+  updatePromptSchedule,
+} from "@/app/(overview)/scheduler/action";
+import { useToast } from "@/app/contexts/toast-context";
 
 export default function EditScheduleModal({
   scheduleData,
@@ -27,6 +31,7 @@ export default function EditScheduleModal({
   setScheduleData,
   isEditScheduleModalOpen,
   setIsEditScheduleModalOpen,
+  setPrompts,
 }: {
   scheduleData: IScheduleData;
   editingPromptId: string | null;
@@ -34,17 +39,16 @@ export default function EditScheduleModal({
   setScheduleData: React.Dispatch<React.SetStateAction<IScheduleData>>;
   isEditScheduleModalOpen: boolean;
   setIsEditScheduleModalOpen: (isEditScheduleModalOpen: boolean) => void;
+  setPrompts: (prompts: IPrompt[]) => void;
 }) {
+  const { success, error } = useToast();
+
   const getRepeatUnit = () => {
     switch (scheduleData.frequency) {
       case "daily":
         return "day(s)";
       case "weekly":
         return "week(s)";
-      case "monthly":
-        return "month(s)";
-      default:
-        return "time(s)";
     }
   };
 
@@ -57,10 +61,43 @@ export default function EditScheduleModal({
     }));
   };
 
-  const handleUpdateSchedule = () => {
+  const handleUpdateSchedule = async () => {
     console.log("Updating schedule for prompt:", editingPromptId, scheduleData);
-    setIsEditScheduleModalOpen(false);
-    setEditingPromptId(null);
+
+    try {
+      if (!editingPromptId) return;
+
+      const { success: isSuccess } = await updatePromptSchedule({
+        id: editingPromptId,
+        schedule_frequency: scheduleData.frequency,
+        schedule_time: scheduleData.time,
+        schedule_repeat_period: scheduleData.repeatEvery,
+        schedule_week_day: scheduleData.selectedDays,
+      });
+
+      if (isSuccess) {
+        // Success toast
+        success(
+          "Schedule Updated!",
+          "Your prompt schedule has been successfully updated"
+        );
+
+        const { data, success: listSuccess } = await getSchedulerList();
+        if (data && listSuccess) setPrompts(data.prompt_list);
+
+        setIsEditScheduleModalOpen(false);
+      } else {
+        error("Update Failed", "Failed to update schedule. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      error(
+        "Unexpected Error",
+        "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setEditingPromptId(null);
+    }
   };
 
   return (
@@ -76,14 +113,6 @@ export default function EditScheduleModal({
               Edit Schedule
             </DialogTitle>
           </div>
-          {/* <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsEditScheduleModalOpen(false)}
-            className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600 dark:text-gray-400 dark:hover:text-white"
-          >
-            <X className="h-4 w-4" />
-          </Button> */}
         </DialogHeader>
 
         <div className="space-y-6">
@@ -113,12 +142,6 @@ export default function EditScheduleModal({
                   className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
                 >
                   Weekly
-                </SelectItem>
-                <SelectItem
-                  value="monthly"
-                  className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
-                >
-                  Monthly
                 </SelectItem>
               </SelectContent>
             </Select>

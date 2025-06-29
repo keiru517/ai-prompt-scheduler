@@ -3,13 +3,14 @@
 import type React from "react";
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-import { ICountry } from "@/lib/definition";
+import { ICountry, IDecodedToken } from "@/lib/definition";
 import { verifySMS, logIn } from "@/app/action";
 import { useUser } from "@/app/contexts/user-context";
 
@@ -73,7 +74,7 @@ export default function SMSVerify({
       setIsLoading(true);
 
       const phone_number = selectedCountry.code + phoneNumber;
-      const { success, error } = await verifySMS({
+      const { success, error, data } = await verifySMS({
         phone_number,
         otp_code: code,
       });
@@ -84,10 +85,13 @@ export default function SMSVerify({
       }
 
       if (success) {
+        if (!data?.access_token) return;
+        const decoded: IDecodedToken = jwtDecode(data?.access_token);
+
         const userData = {
           phoneNumber: selectedCountry.code + phoneNumber,
-          firstName: firstName || undefined,
-          lastName: lastName || undefined,
+          firstName: firstName || decoded.first_name,
+          lastName: lastName || decoded.last_name,
           isVerified: true,
           createdAt: new Date().toISOString(),
         };

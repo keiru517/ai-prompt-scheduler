@@ -1,5 +1,5 @@
 import { ICountry } from "./definition";
-import { IPrompt, IContact, IPlans } from "./definition";
+import { IContact, IPlans } from "./definition";
 
 export const countries: ICountry[] = [
   { code: "+1", name: "United States", iso: "us" },
@@ -55,58 +55,13 @@ export const countries: ICountry[] = [
 ];
 
 export const daysOfWeek = [
-  { id: "mon", label: "Mon" },
-  { id: "tue", label: "Tue" },
-  { id: "wed", label: "Wed" },
-  { id: "thu", label: "Thu" },
-  { id: "fri", label: "Fri" },
-  { id: "sat", label: "Sat" },
-  { id: "sun", label: "Sun" },
-];
-
-export const mockPrompts: IPrompt[] = [
-  {
-    id: "1",
-    title: "Daily Wellness Check",
-    description:
-      "Send me a motivational message about staying healthy and productive today",
-    isActive: true,
-    isScheduled: false,
-    lastSent: "183 days ago",
-    recipients: 3,
-  },
-  {
-    id: "2",
-    title: "Weekly Team Update",
-    description:
-      "Generate a summary of this week's accomplishments and goals for next week",
-    isActive: false,
-    isScheduled: false,
-    author: "Sarah Johnson",
-    lastSent: "189 days ago",
-    recipients: 4,
-  },
-  {
-    id: "3",
-    title: "Monthly Goal Review",
-    description:
-      "Help me reflect on this month's progress and set intentions for next month",
-    isActive: true,
-    isScheduled: false,
-    lastSent: "196 days ago",
-    recipients: 1,
-  },
-  {
-    id: "4",
-    title: "Mindfulness Reminder",
-    description:
-      "Take 5 minutes to practice mindfulness. Focus on your breath and let go of today's stress.",
-    isActive: true,
-    isScheduled: false,
-    author: "Michael Chen",
-    lastSent: "182 days ago",
-    recipients: 0,
-  },
+  { id: "Mon", label: "Mon" },
+  { id: "Tue", label: "Tue" },
+  { id: "Wed", label: "Wed" },
+  { id: "Thu", label: "Thu" },
+  { id: "Fri", label: "Fri" },
+  { id: "Sat", label: "Sat" },
+  { id: "Sun", label: "Sun" },
 ];
 
 export const mockContacts: IContact[] = [

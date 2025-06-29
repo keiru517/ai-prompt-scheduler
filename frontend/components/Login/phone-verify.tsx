@@ -42,8 +42,6 @@ export default function PhoneVerify({
   const [phoneError, setPhoneError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.info("phonenumhber.......", phoneNumber);
-    if (phoneNumber === "") return;
     e.preventDefault();
     setPhoneNumberVerifyError("");
     setPhoneError("");

@@ -10,7 +10,9 @@ export default function PageHeader({
 }) {
   return (
     <div className="flex items-center justify-between mb-8">
-      <h2 className="text-2xl font-bold text-gray-900">Your Prompts</h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+        Your Prompts
+      </h2>
       <Button
         onClick={() => setIsCreateModalOpen(true)}
         className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"

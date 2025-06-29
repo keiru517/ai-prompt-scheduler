@@ -13,6 +13,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { IContact, INewPrompt } from "@/lib/definition";
+import { useUser } from "@/app/contexts/user-context";
 
 export default function SelectContactsModal({
   contacts,
@@ -28,6 +29,7 @@ export default function SelectContactsModal({
   setNewPrompt: React.Dispatch<React.SetStateAction<INewPrompt>>;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const { user } = useUser();
 
   const getSelectedContacts = () =>
     contacts.filter((contact) => contact.selected);
@@ -43,8 +45,9 @@ export default function SelectContactsModal({
   const getFilteredContacts = () => {
     return contacts.filter(
       (contact) =>
-        contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        contact.phone.includes(searchQuery)
+        contact.phone !== user?.phoneNumber &&
+        (contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          contact.phone.includes(searchQuery))
     );
   };
 
@@ -63,7 +66,6 @@ export default function SelectContactsModal({
     setNewPrompt((prev) => ({ ...prev, selectedContacts: selectedCount }));
     setIsContactsModalOpen(false);
   };
-
   return (
     <>
       <Dialog open={isContactsModalOpen} onOpenChange={setIsContactsModalOpen}>
@@ -72,14 +74,6 @@ export default function SelectContactsModal({
             <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               Select Recipients
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsContactsModalOpen(false)}
-              className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600 dark:text-gray-400 dark:hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </Button>
           </DialogHeader>
 
           <div className="space-y-4">
