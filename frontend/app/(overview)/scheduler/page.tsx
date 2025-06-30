@@ -13,7 +13,7 @@ import {
 } from "@/components/overview/scheduler-page";
 import { getSchedulerList, getUserList } from "./action";
 import { useUser } from "@/app/contexts/user-context";
-import Spinner from "@/components/common/loading-spinner";
+import Spinner from "@/components/common-components/loading-spinner";
 
 export default function SchedulerListPage() {
   const [prompts, setPrompts] = useState<IPrompt[]>([]);
@@ -76,8 +76,6 @@ export default function SchedulerListPage() {
 
     fetchUserList();
   }, []);
-
-  console.info("schedulellist....", prompts);
 
   if (isLoading) {
     return <Spinner content="Page Loading..." />;
