@@ -99,12 +99,12 @@ export default function PhoneVerify({
   return (
     <>
       {" "}
-      <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/70 backdrop-blur-sm">
         <CardHeader className="text-center space-y-2 pb-4">
-          <h2 className="text-2xl font-semibold text-gray-900">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
             Enter Your Phone Number
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             {"We'll send you a verification code"}
           </p>
         </CardHeader>
@@ -114,7 +114,7 @@ export default function PhoneVerify({
             <div className="space-y-2">
               <Label
                 htmlFor="phone"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Phone Number
               </Label>
@@ -128,26 +128,26 @@ export default function PhoneVerify({
                     if (country) setSelectedCountry(country);
                   }}
                 >
-                  <SelectTrigger className="w-32 h-12 border-2 border-gray-200 focus:border-purple-500">
+                  <SelectTrigger className="w-32 h-12 border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 dark:focus:border-purple-500 bg-white dark:bg-gray-900">
                     <div className="flex items-center gap-2">
                       <Image
                         src={`https://flagcdn.com/w40/${selectedCountry.iso}.png`}
                         alt={selectedCountry.name}
                         width={20}
                         height={16}
-                        className="w-5 h-4 object-cover rounded-sm bg-white border"
-                      />{" "}
-                      <span className="text-sm font-medium">
+                        className="w-5 h-4 object-cover rounded-sm bg-white dark:bg-gray-700 border"
+                      />
+                      <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         {selectedCountry.code}
                       </span>
                     </div>
                   </SelectTrigger>
-                  <SelectContent className="max-h-60">
+                  <SelectContent className="max-h-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                     {countries.map((country) => (
                       <SelectItem
                         key={country.iso}
                         value={country.iso}
-                        className="flex items-center justify-between py-3 px-3 hover:bg-gray-50"
+                        className="flex items-center justify-between py-3 px-3 hover:bg-gray-50 dark:hover:bg-gray-700"
                       >
                         <div className="flex items-center gap-3 flex-1">
                           <Image
@@ -155,13 +155,13 @@ export default function PhoneVerify({
                             alt={selectedCountry.name}
                             width={20}
                             height={16}
-                            className="w-5 h-4 object-cover rounded-sm bg-white border"
+                            className="w-5 h-4 object-cover rounded-sm bg-white dark:bg-gray-700 border"
                           />
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-sm">
+                            <span className="font-medium text-sm text-gray-900 dark:text-gray-100">
                               {country.name}
                             </span>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
                               {country.code}
                             </span>
                           </div>
@@ -184,7 +184,7 @@ export default function PhoneVerify({
                     }
                   }}
                   onBlur={() => validatePhoneNumber(phoneNumber)}
-                  className="flex-1 h-12 border-2 border-gray-200 focus:border-purple-500 text-base"
+                  className="flex-1 h-12 border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 dark:focus:border-purple-500 text-base text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
                   required
                   disabled={isLoading}
                 />
@@ -206,6 +206,7 @@ export default function PhoneVerify({
             >
               {isLoading ? "Checking..." : "Send Verification Code"}
             </Button>
+
             {phoneNumberVerifyError && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
                 <span className="w-4 h-4 text-red-500">⚠</span>

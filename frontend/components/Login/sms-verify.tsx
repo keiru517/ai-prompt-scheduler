@@ -130,30 +130,32 @@ export default function SMSVerify({
   return (
     <>
       {" "}
-      <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/70 backdrop-blur-sm">
         <CardHeader className="space-y-4 pb-6">
           <div className="flex items-center">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleBackToPhone}
-              className="p-2 hover:bg-gray-100 rounded-full"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
             </Button>
           </div>
 
           <div className="text-center space-y-2">
-            <h2 className="text-2xl font-semibold text-gray-900">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
               Verify Your Phone
             </h2>
-            <p className="text-gray-600">Enter the 5-digit code we sent</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Enter the 5-digit code we sent
+            </p>
           </div>
         </CardHeader>
 
         <CardContent className="space-y-6">
           <div className="space-y-4">
-            <Label className="text-sm font-medium text-gray-700 block text-center">
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 block text-center">
               Verification Code
             </Label>
 
@@ -169,9 +171,11 @@ export default function SMSVerify({
                   value={digit}
                   onChange={(e) => handleCodeChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  className={`w-12 h-12 text-center text-lg font-semibold border-2 ${
-                    digit ? "border-purple-500 bg-purple-50" : "border-gray-200"
-                  } focus:border-purple-500 focus:bg-purple-50`}
+                  className={`w-12 h-12 text-center text-lg font-semibold border-2 transition-all duration-150 ${
+                    digit
+                      ? "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
+                      : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900"
+                  } focus:border-purple-500 focus:bg-purple-50 dark:focus:bg-purple-900/20 text-gray-900 dark:text-gray-100`}
                 />
               ))}
             </div>
@@ -187,12 +191,12 @@ export default function SMSVerify({
           </Button>
 
           {/* Resend Code */}
-          <div className="text-center">
+          <div className="text-center space-y-3">
             <Button
               variant="link"
               onClick={handleResendCode}
               disabled={resendTimer > 0}
-              className="text-gray-500 hover:text-purple-600 disabled:text-gray-400"
+              className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 disabled:text-gray-400"
             >
               {resendTimer > 0
                 ? `Resend Code (${resendTimer}s)`

@@ -32,7 +32,7 @@ export default function PhoneVerificationPage() {
   }, [resendTimer]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         {/* Header Section */}
         <div className="text-center space-y-4">
@@ -41,7 +41,7 @@ export default function PhoneVerificationPage() {
             <div className="relative">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
                 <Calendar className="w-8 h-8 text-white" />
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center">
                   <Star className="w-3 h-3 text-purple-500 fill-purple-500" />
                 </div>
               </div>
@@ -53,7 +53,7 @@ export default function PhoneVerificationPage() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               AI Scheduler
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-300 text-lg">
               Smart prompts, delivered on time
             </p>
           </div>

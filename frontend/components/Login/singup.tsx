@@ -74,24 +74,24 @@ export default function SignUp({
   return (
     <>
       {" "}
-      <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/70 backdrop-blur-sm">
         <CardHeader className="space-y-4 pb-6">
           <div className="flex items-center">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleBackToPhoneFromSignup}
-              className="p-2 hover:bg-gray-100 rounded-full"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
             </Button>
           </div>
 
           <div className="text-center space-y-2">
-            <h2 className="text-2xl font-semibold text-gray-900">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
               Complete Your Profile
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Tell us your name to personalize your experience
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function SignUp({
               <div className="space-y-2">
                 <Label
                   htmlFor="firstName"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   First Name
                 </Label>
@@ -114,7 +114,7 @@ export default function SignUp({
                   placeholder="John"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="h-12 border-2 border-gray-200 focus:border-purple-500 text-base"
+                  className="h-12 border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 dark:focus:border-purple-500 text-base text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
                   required
                   disabled={isLoading}
                 />
@@ -124,7 +124,7 @@ export default function SignUp({
               <div className="space-y-2">
                 <Label
                   htmlFor="lastName"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Last Name
                 </Label>
@@ -134,7 +134,7 @@ export default function SignUp({
                   placeholder="Doe"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="h-12 border-2 border-gray-200 focus:border-purple-500 text-base"
+                  className="h-12 border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 dark:focus:border-purple-500 text-base text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
                   required
                   disabled={isLoading}
                 />
